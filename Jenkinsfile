@@ -12,15 +12,13 @@ pipeline {
     }
 
     stage('Install & Test') {
-      agent {
-        docker {
-          image 'node:18'
-          args '-v $HOME/.npm:/root/.npm'
-        }
-      }
       steps {
-        sh 'npm install'
-        sh 'npm test || true'
+        script {
+          docker.image('node:18').inside('-v $HOME/.npm:/root/.npm') {
+            sh 'npm install'
+            sh 'npm test || true'
+          }
+        }
       }
     }
 
